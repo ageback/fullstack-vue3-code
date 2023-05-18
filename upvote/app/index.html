@@ -11,8 +11,7 @@
   <div id="app">
     <h2 class="title has-text-centered dividing-header">UpVote!</h2>
     <div class="section">
-      <article class="media" v-for="submission in submissions" v-bind:key="sub
-      .id">
+      <article class="media" v-for="submission in sortedSubmissions" v-bind:key="submission.id">
         <figure class="media-left">
           <img class="image is-64x64" v-bind:src="submission.submissionImage">
         </figure>
