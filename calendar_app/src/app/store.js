@@ -27,6 +27,12 @@ export const store = {
         eventObj.details = newEventDetails;
         eventObj.edit = false;
     },
+    deleteEvent(dayId, eventDetails) {
+        const dayObj = this.getDayObj(dayId);
+        const eventIndexToRemove = dayObj.events.findIndex(event => event.details === eventDetails);
+        dayObj.events.splice(eventIndexToRemove, 1);
+    }
+    ,
     resetEditOfAllEvents() {
         this.state.data.map(dayObj => {
             dayObj.events.map(event => {
@@ -34,8 +40,11 @@ export const store = {
             });
         });
     },
+    getDayObj(dayId) {
+        return this.state.data.find(day => day.id === dayId);
+    },
     getEventObj(dayId, eventDetails) {
-        const dayObj = this.state.data.find(day => day.id === dayId);
+        const dayObj = this.getDayObj(dayId);
         return dayObj.events.find(event => event.details === eventDetails);
     }
 }

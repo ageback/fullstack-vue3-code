@@ -18,6 +18,9 @@ export default {
             store.updateEvent(dayId, originalEventDetails, updatedEventDetails);
             this.newEventDetails = '';
         },
+        deleteEvent(dayId, eventDetails) {
+            store.deleteEvent(dayId, eventDetails);
+        }
     },
     computed: {
         getEventBackgroundColor() {
@@ -36,7 +39,7 @@ export default {
             </span>
             <div class="has-text-centered icons">
                 <i class="fa fa-pencil-square edit-icon" @click="editEvent(day.id, event.details)"></i>
-                <i class="fa fa-trash-o delete-icon"></i>
+                <i class="fa fa-trash-o delete-icon" @click="deleteEvent(day.id, event.details)"></i>
             </div>
         </div>
         <div v-if="event.edit">
