@@ -6,6 +6,8 @@
 4. addNote() 方法随即更新 root instance 的 data 属性，此属性会响应式渲染视图。
 */
 
+const emitter = mitt();
+
 const inputComponent = {
   template: `<input 
               :placeholder="placeholder" 
@@ -22,7 +24,7 @@ const inputComponent = {
   emits: ["add-note"],
   methods: {
     monitorEnterKey() {
-      this.$emit("add-note", {
+      emitter.emit("add-note", {
         note: this.input,
         timestamp: new Date().toLocaleString(),
       });
@@ -47,6 +49,9 @@ const app = {
       this.notes.push(event.note);
       this.timestamps.push(event.timestamp);
     }
+  },
+  created() {
+    emitter.on('add-note', event => this.addNote(event));
   }
 };
 
