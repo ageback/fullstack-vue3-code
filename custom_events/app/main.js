@@ -6,6 +6,15 @@
 4. addNote() 方法随即更新 root instance 的 data 属性，此属性会响应式渲染视图。
 */
 
+const state = {
+  notes: [],
+  timestamps: []
+};
+
+const mutations = {
+  ADD_NOTE() { },
+  ADD_TIMESTAMP() { },
+}
 const emitter = mitt();
 
 const inputComponent = {
