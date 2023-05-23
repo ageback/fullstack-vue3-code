@@ -11,70 +11,88 @@ const state = {
   timestamps: []
 };
 
+const actions = {
+  addNote(context, payload) {
+    context.commit('ADD_NOTE', payload);
+  },
+  addTimestamp(context, payload) {
+    context.commit('ADD_TIMESTAMP', payload);
+  }
+};
+
+const getters = {
+  getNotes(state) {
+    return state.notes;
+  },
+  getTimestamps(state) {
+    return state.timestamps;
+  },
+  getNoteCount(state) {
+    return state.notes.length;
+  }
+};
+
 const mutations = {
-  ADD_NOTE() { },
-  ADD_TIMESTAMP() { },
-}
+  ADD_NOTE(state, payload) {
+    let newNote = payload;
+    state.notes.push(newNote);
+  },
+  ADD_TIMESTAMP(state, payload) {
+    let newTimeStamp = payload;
+    state.timestamps.push(newTimeStamp);
+  },
+};
+
+const store = Vuex.createStore({
+  state, mutations, actions, getters
+});
+
 const emitter = mitt();
 
 const inputComponent = {
   template: `<input 
-              :placeholder="placeholder" 
+      placeholder='Enter a note'
               class="input is-small" 
               type="text" 
               @keyup.enter="monitorEnterKey"
               v-model="input"  />`,
-  props: ["placeholder"],
   data() {
     return {
       input: "",
     };
   },
-  emits: ["add-note"],
   methods: {
-    monitorEnterKey() {
-      emitter.emit("add-note", {
-        note: this.input,
-        timestamp: new Date().toLocaleString(),
-      });
-      this.input = "";
+    monitorEnterKey () {
+      this.$store.dispatch('addNote', this.input);
+      this.$store.dispatch('addTimestamp', new Date().toLocaleString());
+      this.input = '';
     },
   },
 };
 
 const noteCountComponent = {
   template: `<div class="note-count">Note count: <strong>{{ noteCount }}</strong></div>`,
-  data() {
-    return {
-      noteCount: 0,
-    };
+  computed: {
+    noteCount() {
+      return this.$store.getters.getNoteCount;
+    }
   },
-  created() {
-    emitter.on('add-note', event => this.noteCount++);
-  }
 }
 
-const app = {
-  data() {
-    return {
-      notes: [],
-      timestamps: [],
-      placeholder: 'Enter a note'
+
+const app = Vue.createApp({
+  computed: {
+    notes() {
+      return this.$store.getters.getNotes;
+    },
+    timestamps() {
+      return this.$store.getters.getTimestamps;
     }
   },
   components: {
-    'input-component': inputComponent,
-    "note-count-component": noteCountComponent,
+    "input-component": inputComponent,
+    "note-count-component": noteCountComponent
   },
-  methods: {
-    addNote(event) {
-      this.notes.push(event.note);
-      this.timestamps.push(event.timestamp);
-    }
-  },
-  created() {
-    emitter.on('add-note', event => this.addNote(event));
-  }
-};
-
-Vue.createApp(app).mount('#app');
+});
+app.use(store);
+app.mount('#app');
