@@ -1,6 +1,7 @@
 <template>
     <div>
-        <h2 class="has-text-weight-bold">{{ productItem.title }}
+        <h2 class="has-text-weight-bold">
+            {{ productItem.title }}
             <span class="tag is-primary is-pulled-right has-text-white">
                 Add to Cart
             </span>
